@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
@@ -47,7 +46,7 @@ public class Lambdas {
         }));
 
         // When
-        List<String> filterJava8 = list.stream().filter(x -> Integer.valueOf(x) % 2 == 0).collect(Collectors.toList());
+        List<String> filterJava8 = null;
 
         // Then
         assertThat(filterGuava).isEqualTo(filterJava8);
@@ -64,7 +63,7 @@ public class Lambdas {
        });
 
        // When
-       List<Integer> mapJava8 = list.stream().map(x -> Integer.valueOf(x)).collect(Collectors.toList());
+       List<Integer> mapJava8 = null;
 
        // Then
        assertThat(mapGuava).isEqualTo(mapJava8);
@@ -81,7 +80,7 @@ public class Lambdas {
         });
 
         // When
-        List<Integer> mapJava8 = list.stream().map(Integer::new).collect(Collectors.toList());
+        List<Integer> mapJava8 = null;
 
         // Then
         assertThat(mapGuava).isEqualTo(mapJava8);
@@ -98,7 +97,7 @@ public class Lambdas {
         });
 
         // When
-        List<Integer> mapJava8 = list.stream().map(Integer::valueOf).collect(Collectors.toList());
+        List<Integer> mapJava8 = null;
 
         // Then
         assertThat(mapGuava).isEqualTo(mapJava8);
@@ -115,7 +114,7 @@ public class Lambdas {
         });
 
         // When
-        String reduceJava8 = list.stream().reduce("", (x, y) -> x + y);
+        String reduceJava8 = null;
 
         // Then
         assertThat(reduceGuava).isEqualTo(reduceJava8);
@@ -132,7 +131,7 @@ public class Lambdas {
         });
 
         // When
-        int reduceJava8 = list.stream().reduce(0, (x, y) -> x + Integer.valueOf(y), (x, y) -> x + y);
+        int reduceJava8 = 0;
 
         // Then 
         assertThat(reduceGuava).isEqualTo(reduceJava8);
@@ -157,7 +156,7 @@ public class Lambdas {
         }));
 
         // When
-        List<Integer> intsJava8 = list.stream().flatMap(x -> newArrayList(x).stream().map(y -> Integer.valueOf(y))).collect(Collectors.toList());
+        List<Integer> intsJava8 = null;
 
         // Then
        assertThat(ints).isEqualTo(intsJava8);
@@ -168,7 +167,7 @@ public class Lambdas {
         // Given
 
         // When
-        boolean result = list.removeIf(x -> Integer.valueOf(x) % 2 != 0);
+        boolean result = false;
 
         // Then
         assertThat(result).isTrue();
@@ -185,7 +184,6 @@ public class Lambdas {
         // Given
 
         // When
-        list.sort((x, y) -> Integer.valueOf(y) - Integer.valueOf(x));
 
         // Then
         assertThat(list).isEqualTo(newArrayList("10", "9", "8", "7", "6", "5", "4", "3", "2", "1"));
@@ -197,7 +195,7 @@ public class Lambdas {
         List<String> list = newArrayList("10", "9", "8", "7", "6", "5", "4", "3", "2", "1");
 
         // When
-        List<Integer> result = list.stream().map(x -> Integer.valueOf(x)).sorted(Integer::compare).collect(Collectors.toList());
+        List<Integer> result = null;
 
         // Then
         assertThat(result).isEqualTo(newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
@@ -205,10 +203,7 @@ public class Lambdas {
 
     @Test
     public void should_filter_even_numbers_in_parallel() {
-        list.parallelStream().filter(x -> {
-           System.out.println("Thread : " + Thread.currentThread().getName());
-           return Integer.valueOf(x) % 2 == 0;
-        }).collect(Collectors.toList());
+
     }
 
     @Test
@@ -216,11 +211,7 @@ public class Lambdas {
         // Given
 
         // When
-        Optional<Integer> first = list.stream().filter(x -> Integer.valueOf(x) % 2 == 0)
-                                               .map(x -> Integer.valueOf(x) + 2)
-                                               .parallel()
-                                               .sorted((x, y) -> y - x)
-                                               .findFirst();
+        Optional<Integer> first = null;
 
         // Then
         assertThat(first.isPresent()).isTrue();
