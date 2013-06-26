@@ -21,7 +21,7 @@ public class Lambdas {
 //    The basic syntax of a lambda is either
 //
 //            (parameters) -> expression
-//                            or
+//    or
 //            (parameters) -> { statements; }
 //
 //    Examples :
@@ -104,13 +104,6 @@ public class Lambdas {
         assertThat(mapGuava).isEqualTo(mapJava8);
     }
 
-    // + with instance method ? for each & System.out.println
-    @Test
-    public void should_print_in_for_each() {
-        list.forEach(System.out::println);
-    }
-
-
     @Test
     public void should_reduce_by_concatenating_all_strings() {
         // Given
@@ -171,47 +164,47 @@ public class Lambdas {
     }
 
     @Test
-    public void should_flat_map_bis() {
-        List<? super Optional<? extends Object>> collect = (List<? super Optional<? extends Object>>) list.stream().flatMap(x -> newArrayList(x).stream().map(
-                y -> {
-                    if (Integer.valueOf(y) % 2 == 0)
-                        return Optional.of(y);
-                    else
-                        return Optional.empty();
-                }
-        )).collect(Collectors.toList());
-
-        System.out.println(collect);
-    }
-
-    @Test
     public void should_remove_element_if_not_even() {
+        // Given
+
+        // When
         boolean result = list.removeIf(x -> Integer.valueOf(x) % 2 != 0);
 
+        // Then
         assertThat(result).isTrue();
+        assertThat(list).hasSize(5);
     }
 
     @Test
-    public void should() {
-//        list.forEach(x -> x + "0");
-
-        System.out.println(list);
+    public void should_use_for_each() {
+        list.forEach(System.out::println);
     }
 
     @Test
     public void should_sort_desc() {
+        // Given
+
+        // When
         list.sort((x, y) -> Integer.valueOf(y) - Integer.valueOf(x));
 
-
-        list.stream().map(x -> Integer.valueOf(x)).sorted(Integer::compare);
-
+        // Then
         assertThat(list).isEqualTo(newArrayList("10", "9", "8", "7", "6", "5", "4", "3", "2", "1"));
     }
 
     @Test
+    public void should_convert_to_int_and_sort_desc_with_static_method_reference() {
+        // Given
+        List<String> list = newArrayList("10", "9", "8", "7", "6", "5", "4", "3", "2", "1");
+
+        // When
+        List<Integer> result = list.stream().map(x -> Integer.valueOf(x)).sorted(Integer::compare).collect(Collectors.toList());
+
+        // Then
+        assertThat(result).isEqualTo(newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+    }
+
+    @Test
     public void should_filter_even_numbers_in_parallel() {
-
-
         list.parallelStream().filter(x -> {
            System.out.println("Thread : " + Thread.currentThread().getName());
            return Integer.valueOf(x) % 2 == 0;
@@ -219,18 +212,34 @@ public class Lambdas {
     }
 
     @Test
-    public void should_() {
-        // Filtre + Map + Tri en // + findFirst > 8
+    public void should_filter_even_numbers_map_to_int_and_add_2_sort_in_parallel_and_get_first_if_exists() {
+        // Given
 
-        Optional<Integer> first = list.stream().filter(x -> Integer.valueOf(x) % 2 == 0).map(x -> Integer.valueOf(x) + 2).parallel().sorted((x, y) -> y - x).findFirst();
+        // When
+        Optional<Integer> first = list.stream().filter(x -> Integer.valueOf(x) % 2 == 0)
+                                               .map(x -> Integer.valueOf(x) + 2)
+                                               .parallel()
+                                               .sorted((x, y) -> y - x)
+                                               .findFirst();
+
+        // Then
+        assertThat(first.isPresent()).isTrue();
+        assertThat(first.get()).isEqualTo(12);
     }
 
 
+    // Assignement before use rule for local variables
     UnaryOperator<Integer> factorial = i -> i == 0 ? 1 : i * factorial.apply(i - 1);
 
     @Test
     public void should_compute_factorial_in_a_recursive_way() {
-        assertThat(factorial.apply(10)).isEqualTo(3628800);
+        // Given
+
+        // When
+        Integer result = factorial.apply(10);
+
+        // Then
+        assertThat(result).isEqualTo(3628800);
     }
 
 
